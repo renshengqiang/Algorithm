@@ -1,3 +1,6 @@
 *.o
 *.oo
+*.dd
+tags
+cscope*
 main

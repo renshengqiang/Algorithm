@@ -115,6 +115,6 @@ AVLTreeNode<ElementType> *AVLTree<ElementType>::_newNodeImpl(void)
 {
 	AVLTreeNode<ElementType> *pNode = new AVLTreeNode<ElementType>();
 	pNode->bf = 0;
-	pNode->parent = pNode->lchild = pNode->rchild = NULL;
+	pNode->parent = pNode->lchild = pNode->rchild = pNode->pre = pNode->next = NULL;
 	return pNode;
 }

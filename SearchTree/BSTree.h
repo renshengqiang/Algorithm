@@ -12,12 +12,14 @@ class BSTreeNode{
 				ElementType element;
 				BSTreeNode<ElementType> *parent;
 				BSTreeNode<ElementType> *lchild,*rchild;
+				BSTreeNode<ElementType> *pre,*next;
 };
 template <typename ElementType>
 class BSTree {
 		public:
 				BSTree();
 				virtual ~BSTree();
+                BSTreeNode<ElementType>* GetFirstNode(void){ return firstNode;}
 				virtual BSTreeNode<ElementType> *Insert(ElementType element);
 				virtual BSTreeNode<ElementType> *Delete(ElementType element);
 				virtual BSTreeNode<ElementType> *Search(ElementType element);
@@ -25,7 +27,7 @@ class BSTree {
 				virtual void PreOrderTraverse(void);
 		protected:
 				virtual BSTreeNode<ElementType> *_newNodeImpl(void);
-				BSTreeNode<ElementType> *rootNode;
+				BSTreeNode<ElementType> *rootNode, *firstNode;
 				ElementType deletedNodeElement;
 		private:
 				void _clear(BSTreeNode<ElementType> *root);

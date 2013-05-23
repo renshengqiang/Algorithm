@@ -11,14 +11,14 @@
 template <typename ElementType>
 BSTree<ElementType>::BSTree()
 {
-	rootNode = 0;
+    rootNode = firstNode = 0;
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
 template <typename ElementType>
 BSTree<ElementType>::~BSTree()
 {
 	_clear(rootNode);
-	rootNode = 0;
+	rootNode = firstNode = 0;
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
 template <typename ElementType>
@@ -60,11 +60,19 @@ BSTreeNode<ElementType> *BSTree<ElementType>::Delete(ElementType element)
 		}
 		else if(p->parent->lchild == p){
 			p->parent->lchild = p->rchild;
-			if(p->rchild) p->rchild->parent = p->parent;
+			if(p->rchild){
+                p->rchild->parent = p->parent;
+            }
 		}else{
 			p->parent->rchild = p->rchild;
 			if(p->rchild) p->rchild->parent = p->parent;
 		}
+        if(p->pre){
+            p->pre->next = p->next;
+        }
+        if(p->next){
+            p->next->pre = p->pre;
+        }
 		deletedNodeElement = element;
 		parent =  p->parent;
 		delete p;
@@ -82,6 +90,12 @@ BSTreeNode<ElementType> *BSTree<ElementType>::Delete(ElementType element)
 			if(q->lchild) q->lchild->parent = q->parent;
 			parent = q->parent;
 		}
+        if(q->pre){
+            q->pre->next = q->next;
+        }
+        if(q->next){
+            q->next->pre = q->pre;
+        }
 		p->element = q->element;
 		deletedNodeElement = q->element;
 		delete q;
@@ -115,6 +129,23 @@ BSTreeNode<ElementType>* BSTree<ElementType>::_insert(BSTreeNode<ElementType> *p
 		pElement->element = element;
 		pElement->parent = parent;
 		(*root) = pElement;
+        if(parent == NULL){
+            (*root)->pre = (*root)->next = NULL;
+            firstNode = *root;
+        }else{
+            if(&(parent->lchild) == root){
+                (*root)->pre = parent->pre;
+                (*root)->next = parent;
+                if(parent->pre) parent->pre->next = *root;
+                else firstNode = *root;
+                parent->pre = *root;
+            }else{
+                (*root)->pre = parent;
+                (*root)->next = parent->next;
+                if(parent->next) parent->next->pre = *root;
+                parent->next = *root;
+            }
+        }
 		return parent;
 	}else if(element < (*root)->element) return _insert(*root, &((*root)->lchild),element);
 	else return _insert(*root, &((*root)->rchild),element);

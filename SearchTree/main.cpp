@@ -20,7 +20,15 @@ int main()
 	itree.Insert(-4);
 	itree.Insert(-2);
 	itree.Insert(-1);
-	
+    
+    std::cout << "traverse through thread info:\n";
+    BSTreeNode<int> *firstNode = itree.GetFirstNode();
+    while(firstNode){
+        std::cout << firstNode->element << " ";
+        firstNode = firstNode->next;
+    }
+    std::cout << "\n-----------------------------\n";
+
 	std::cout << "InOrder traverse:\n";
 	itree.InOrderTraverse();
 	std::cout << "PreOrder traverse:\n";

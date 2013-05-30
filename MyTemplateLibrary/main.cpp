@@ -70,5 +70,11 @@ int main()
 		cout << *iter << " ";
 	}
 	cout << endl;
+
+    for(Vector<int>::reverse_iterator iter = vector2.rbegin(); iter != vector2.rend(); ++iter)
+    {
+        cout << *iter << " ";
+    }
+    cout << endl;
 	return 0;
 }

@@ -15,6 +15,23 @@ namespace QTL{
         typedef T value_type;
 		typedef T* iterator;
         typedef const T* const_iterator;
+        struct reverse_iterator{
+            reverse_iterator();
+            reverse_iterator(iterator iter);
+
+            reverse_iterator& operator++();
+            reverse_iterator operator++(int);
+            reverse_iterator& operator--();
+            reverse_iterator operator--(int);
+            bool operator==(const reverse_iterator& rhs);
+            bool operator!=(const reverse_iterator& rhs);
+
+            T&  operator*();
+            T*  operator->();
+        private:
+            T* p;
+        };
+        typedef const reverse_iterator const_reverse_iterator;
 
 		Vector(size_t size);
 		Vector();
@@ -27,6 +44,11 @@ namespace QTL{
         const_iterator end(void) const;
 		iterator end(void);
 
+        reverse_iterator rbegin(void);
+        const_reverse_iterator rbegin(void) const;
+        reverse_iterator rend(void);
+        const_reverse_iterator rend(void) const;
+
 		void push_back(const T& t);
 		void push_front(const T& t);
 		iterator insert(iterator iter, const T& t);
@@ -36,15 +58,15 @@ namespace QTL{
 		void pop_back(void);
 		void pop_front(void);
 
-		size_t size(void);
-		size_t max_size(void);
+		size_type size(void);
+		size_type max_size(void);
 		bool empty(void);
-		void resize(size_t size);
+		void resize(size_type size);
 		
         T&	back(void);
 		T&	front(void);
-		T&	at(size_t n);
-		T&	operator[](size_t n);
+		T&	at(size_type n);
+		T&	operator[](size_type n);
 
         void swap(Vector<T>& rhs);
 	private:

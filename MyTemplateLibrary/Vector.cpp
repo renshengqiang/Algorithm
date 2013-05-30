@@ -22,6 +22,72 @@
  * */
 namespace QTL{
     //-----------------------------------------------------------------------------
+    template <typename T>
+    Vector<T>::reverse_iterator::reverse_iterator()
+    {
+        p = NULL;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    Vector<T>::reverse_iterator::reverse_iterator(T *pt)
+    {
+        p = pt;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::reverse_iterator& Vector<T>::reverse_iterator::operator++()
+    {
+        --p;
+        return *this;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::reverse_iterator Vector<T>::reverse_iterator::operator++(int)
+    {
+        Vector<T>::reverse_iterator old(*this);
+        --p;
+        return old;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::reverse_iterator& Vector<T>::reverse_iterator::operator--()
+    {
+        ++p;
+        return *this;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::reverse_iterator Vector<T>::reverse_iterator::operator--(int)
+    {
+        Vector<T>::reverse_iterator old(*this);
+        ++p;
+        return old;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::value_type&  Vector<T>::reverse_iterator::operator*()
+    {
+        return *p;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::value_type* Vector<T>::reverse_iterator::operator->()
+    {
+        return p;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    bool Vector<T>::reverse_iterator::operator==(const Vector<T>::reverse_iterator& rhs)
+    {
+        return p == rhs.p;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    bool Vector<T>::reverse_iterator::operator!=(const Vector<T>::reverse_iterator& rhs)
+    {
+        return p != rhs.p;
+    }
+    //-----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>::Vector()
 	{
@@ -76,28 +142,68 @@ namespace QTL{
 	}
     //-----------------------------------------------------------------------------
     template <typename T>
-    const T* Vector<T>::begin() const
+    typename Vector<T>::const_iterator Vector<T>::begin() const
     {
         return pVectorBegin;
     }
     //-----------------------------------------------------------------------------
 	template<typename T>
-	T* Vector<T>::begin() 
+	typename Vector<T>::iterator Vector<T>::begin() 
 	{
 		return pVectorBegin;
 	}
     //-----------------------------------------------------------------------------
     template <typename T>
-    const T* Vector<T>::end() const
+    typename Vector<T>::const_iterator Vector<T>::end() const
     {
         return pVectorEnd;
     }
     //-----------------------------------------------------------------------------
 	template<typename T>
-	T* Vector<T>::end()
+	typename Vector<T>::iterator Vector<T>::end()
 	{
 		return pVectorEnd;
 	}
+    //-----------------------------------------------------------------------------
+	template <typename T>
+    typename Vector<T>::reverse_iterator Vector<T>::rbegin()
+    {
+        if(pVectorEnd == NULL)
+        {
+            return NULL;
+        }
+        return pVectorEnd-1;
+    }
+    //-----------------------------------------------------------------------------
+	template <typename T>
+    typename Vector<T>::const_reverse_iterator Vector<T>::rbegin() const
+    {
+        if(pVectorEnd == NULL)
+        {
+            return NULL;
+        }
+        return pVectorEnd-1;
+    }
+    //-----------------------------------------------------------------------------
+	template <typename T>
+    typename Vector<T>::reverse_iterator Vector<T>::rend()
+    {
+        if(pVectorBegin == NULL)
+        {
+            return NULL;
+        }
+        return pVectorBegin-1;
+    }
+    //-----------------------------------------------------------------------------
+	template <typename T>
+    typename Vector<T>::const_reverse_iterator Vector<T>::rend() const
+    {
+        if(pVectorBegin == NULL)
+        {
+            return NULL;
+        }
+        return pVectorBegin-1;
+    }
     //-----------------------------------------------------------------------------
 	template <typename T>
 	void Vector<T>::push_back(const T& item)
@@ -165,7 +271,7 @@ namespace QTL{
     }//push_front
     //-----------------------------------------------------------------------------
     template <typename T>
-    T* Vector<T>::insert(T* iter, const T& item)
+    typename Vector<T>::iterator Vector<T>::insert(typename Vector<T>::iterator iter, const T& item)
     {
        T t(item);
        if(iter < pVectorBegin || iter > pVectorEnd)
@@ -197,7 +303,7 @@ namespace QTL{
     }//insert
     //-----------------------------------------------------------------------------
     template <typename T>
-    T* Vector<T>::erase(T* item)
+    typename Vector<T>::iterator Vector<T>::erase(typename Vector<T>::iterator item)
     {
        if(item < pVectorBegin || item > pVectorEnd)
        {
@@ -206,6 +312,7 @@ namespace QTL{
        bcopy(item + 1, item, (pVectorEnd - item)*sizeof(T));
        --pVectorEnd;
        --mSize;
+       return item;
     }
     //-----------------------------------------------------------------------------
     template <typename T>
@@ -241,13 +348,13 @@ namespace QTL{
     }
     //-----------------------------------------------------------------------------
     template <typename T>
-    size_t Vector<T>::size()
+    typename Vector<T>::size_type Vector<T>::size()
     {
         return mSize;
     }
     //-----------------------------------------------------------------------------
     template <typename T>
-    size_t Vector<T>::max_size()
+    typename Vector<T>::size_type Vector<T>::max_size()
     {
         return mMaxSize;
     }
@@ -259,7 +366,7 @@ namespace QTL{
     }
     //-----------------------------------------------------------------------------
     template <typename T>
-    void Vector<T>::resize(size_t size)
+    void Vector<T>::resize(typename Vector<T>::size_type size)
     {
         pVectorBegin = (T*)realloc(pVectorBegin, size*sizeof(T));
         mMaxSize = size;
@@ -286,13 +393,13 @@ namespace QTL{
     }
     //-----------------------------------------------------------------------------
     template <typename T>
-    T& Vector<T>::at(size_t n)
+    T& Vector<T>::at(typename Vector<T>::size_type n)
     {
         return *(pVectorBegin + n);
     }
     //-----------------------------------------------------------------------------
     template <typename T>
-    T& Vector<T>::operator[](size_t n)
+    T& Vector<T>::operator[](typename Vector<T>::size_type n)
     {
         return *(pVectorBegin + n);
     }

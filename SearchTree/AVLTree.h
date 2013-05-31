@@ -8,22 +8,20 @@
 #define _AVLTREE_H
 #include "BSTree.h"
 
-template <typename ElementType>
-class AVLTreeNode : public BSTreeNode<ElementType>{
-		public:
-				int bf;
-};
- 
-template <typename ElementType>
-class AVLTree : public BSTree<ElementType> {
-		public:
-				AVLTree();
-				virtual ~AVLTree();
-				virtual AVLTreeNode<ElementType> *Insert(ElementType element);
-				virtual AVLTreeNode<ElementType> *Delete(ElementType element);
-				virtual AVLTreeNode<ElementType> *Search(ElementType element);
-		protected:
-				AVLTreeNode<ElementType> *_newNodeImpl(void);
+template <typename KeyType, typename ValueType>
+class AVLTree : public BSTree<KeyType, ValueType> {
+public:
+    class AVLTreeNode: public BSTree<KeyType, ValueType>::BSTreeNode{
+        public:
+            int bf;
+    };
+    AVLTree();
+    virtual ~AVLTree();
+    virtual AVLTreeNode *Insert(KeyType key, ValueType value);
+    virtual AVLTreeNode *Delete(KeyType key);
+    virtual AVLTreeNode *Search(KeyType key);
+protected:
+    AVLTreeNode *_newNodeImpl(void);
 };
 
 #include "AVLTree.cpp"

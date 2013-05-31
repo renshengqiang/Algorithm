@@ -6,35 +6,36 @@
  ************************************************************************/
 #ifndef _BSTREE_H
 #define _BSTREE_H
-template <typename ElementType>
-class BSTreeNode{
-		public:
-				ElementType element;
-				BSTreeNode<ElementType> *parent;
-				BSTreeNode<ElementType> *lchild,*rchild;
-				BSTreeNode<ElementType> *pre,*next;
-};
-template <typename ElementType>
+template <typename KeyType, typename ValueType>
 class BSTree {
 		public:
+                class BSTreeNode{
+                public:
+                    KeyType key;
+                    ValueType value;
+                    BSTreeNode  *parent;
+                    BSTreeNode  *lchild,*rchild;
+                    BSTreeNode  *pre,*next;
+                };
+
 				BSTree();
 				virtual ~BSTree();
-                BSTreeNode<ElementType>* GetFirstNode(void){ return firstNode;}
-				virtual BSTreeNode<ElementType> *Insert(ElementType element);
-				virtual BSTreeNode<ElementType> *Delete(ElementType element);
-				virtual BSTreeNode<ElementType> *Search(ElementType element);
+                BSTreeNode* GetFirstNode(void){ return firstNode;}
+				virtual BSTreeNode* Insert(KeyType key, ValueType value);
+				virtual BSTreeNode* Delete(KeyType key);
+				virtual BSTreeNode* Search(KeyType key);
 				virtual void InOrderTraverse(void);
 				virtual void PreOrderTraverse(void);
 		protected:
-				virtual BSTreeNode<ElementType> *_newNodeImpl(void);
-				BSTreeNode<ElementType> *rootNode, *firstNode;
-				ElementType deletedNodeElement;
+				virtual BSTreeNode* _newNodeImpl(void);
+				BSTreeNode *rootNode, *firstNode;
+				KeyType deletedNodeElement;
 		private:
-				void _clear(BSTreeNode<ElementType> *root);
-				BSTreeNode<ElementType>* _insert(BSTreeNode<ElementType> *parent, BSTreeNode<ElementType> **root, ElementType element);
-				BSTreeNode<ElementType>* _search(BSTreeNode<ElementType> *root, ElementType element);
-				void _inOrderTraverse(BSTreeNode<ElementType> *root);
-				void _preOrderTraverse(BSTreeNode<ElementType> *root);
+				void _clear(BSTreeNode *root);
+				BSTreeNode* _insert(BSTreeNode *parent, BSTreeNode **root, KeyType key, ValueType value);
+				BSTreeNode* _search(BSTreeNode  *root, KeyType key);
+				void _inOrderTraverse(BSTreeNode    *root);
+				void _preOrderTraverse(BSTreeNode   *root);
 };
 #include "BSTree.cpp"
 #endif

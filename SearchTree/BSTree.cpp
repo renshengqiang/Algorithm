@@ -8,21 +8,21 @@
 #include "BSTree.h"
 #include <iostream>
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-BSTree<ElementType>::BSTree()
+template <typename KeyType, typename ValueType>
+BSTree<KeyType, ValueType>::BSTree()
 {
     rootNode = firstNode = 0;
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-BSTree<ElementType>::~BSTree()
+template <typename KeyType, typename ValueType>
+BSTree<KeyType, ValueType>::~BSTree()
 {
 	_clear(rootNode);
 	rootNode = firstNode = 0;
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-void BSTree<ElementType>::_clear(BSTreeNode<ElementType> *root)
+template <typename KeyType, typename ValueType>
+void BSTree<KeyType, ValueType>::_clear(typename BSTree<KeyType, ValueType>::BSTreeNode *root)
 {
 	if(root == NULL) return;
 	_clear(root->lchild);
@@ -33,23 +33,25 @@ void BSTree<ElementType>::_clear(BSTreeNode<ElementType> *root)
 /*
  * return parent node of the inserted item
  */
-template <typename ElementType>
-BSTreeNode<ElementType> *BSTree<ElementType>::Insert(ElementType element)
+template <typename KeyType, typename ValueType>
+typename BSTree<KeyType, ValueType>::BSTreeNode*
+BSTree<KeyType, ValueType>::Insert(KeyType key, ValueType value)
 {
-	return _insert(NULL, &rootNode, element);
+	return _insert(NULL, &rootNode, key, value);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
 /*
  * return the parent node of the turely deleted node
  * return NULL means not find the node to find
  */
-template <typename ElementType>
-BSTreeNode<ElementType> *BSTree<ElementType>::Delete(ElementType element)
+template <typename KeyType, typename ValueType>
+typename BSTree<KeyType, ValueType>::BSTreeNode*
+BSTree<KeyType, ValueType>::Delete(KeyType key)
 {
-	BSTreeNode<ElementType> *p = rootNode, *q, *parent;
+    typename BSTree<KeyType, ValueType>::BSTreeNode *p = rootNode, *q, *parent;
 
-	while(p && p->element != element){
-		if(p->element < element) p = p->rchild;
+	while(p && p->key != key){
+		if(p->key < key) p = p->rchild;
 		else p = p->lchild;
 	}
 	if(p == NULL) return NULL;/*can not find*/
@@ -73,7 +75,7 @@ BSTreeNode<ElementType> *BSTree<ElementType>::Delete(ElementType element)
         if(p->next){
             p->next->pre = p->pre;
         }
-		deletedNodeElement = element;
+		deletedNodeElement = key;
 		parent =  p->parent;
 		delete p;
 		return parent;
@@ -96,39 +98,42 @@ BSTreeNode<ElementType> *BSTree<ElementType>::Delete(ElementType element)
         if(q->next){
             q->next->pre = q->pre;
         }
-		p->element = q->element;
-		deletedNodeElement = q->element;
+		p->key = q->key;
+		deletedNodeElement = q->key;
 		delete q;
 		return parent;
 	}
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-BSTreeNode<ElementType> *BSTree<ElementType>::Search(ElementType element)
+template <typename KeyType, typename ValueType>
+typename BSTree<KeyType, ValueType>::BSTreeNode*
+BSTree<KeyType, ValueType>::Search(KeyType key)
 {
-	return _search(rootNode, element);
+	return _search(rootNode, key);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-void BSTree<ElementType>::InOrderTraverse(void)
+template <typename KeyType, typename ValueType>
+void BSTree<KeyType, ValueType>::InOrderTraverse(void)
 {
 	_inOrderTraverse(rootNode);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-void BSTree<ElementType>::PreOrderTraverse(void)
+template <typename KeyType, typename ValueType>
+void BSTree<KeyType, ValueType>::PreOrderTraverse(void)
 {
 	_preOrderTraverse(rootNode);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-BSTreeNode<ElementType>* BSTree<ElementType>::_insert(BSTreeNode<ElementType> *parent,BSTreeNode<ElementType> **root, ElementType element)
+template <typename KeyType, typename ValueType>
+typename BSTree<KeyType, ValueType>::BSTreeNode*
+BSTree<KeyType, ValueType>::_insert(typename BSTree<KeyType, ValueType>::BSTreeNode *parent, typename BSTree<KeyType, ValueType>::BSTreeNode **root, KeyType key, ValueType value)
 {
 	if(*root == 0){
-		BSTreeNode<ElementType> *pElement = _newNodeImpl();
-		pElement->element = element;
-		pElement->parent = parent;
-		(*root) = pElement;
+        typename BSTree<KeyType, ValueType>::BSTreeNode *pNode = _newNodeImpl();
+		pNode->key = key;
+        pNode->value = value;
+		pNode->parent = parent;
+		(*root) = pNode;
         if(parent == NULL){
             (*root)->pre = (*root)->next = NULL;
             firstNode = *root;
@@ -147,41 +152,43 @@ BSTreeNode<ElementType>* BSTree<ElementType>::_insert(BSTreeNode<ElementType> *p
             }
         }
 		return parent;
-	}else if(element < (*root)->element) return _insert(*root, &((*root)->lchild),element);
-	else return _insert(*root, &((*root)->rchild),element);
+	}else if(key < (*root)->key) return _insert(*root, &((*root)->lchild),key, value);
+	else return _insert(*root, &((*root)->rchild), key, value);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-BSTreeNode<ElementType>* BSTree<ElementType>::_search(BSTreeNode<ElementType> *root, ElementType element)
+template <typename KeyType, typename ValueType>
+typename BSTree<KeyType, ValueType>::BSTreeNode*
+BSTree<KeyType, ValueType>::_search(typename BSTree<KeyType, ValueType>::BSTreeNode *root, KeyType key)
 {
 	if(root==0) return 0;
-	else if(root->element == element) return root;
-	else if(element < root->element) return _search(root->lchild, element);
-	else return _search(root->rchild, element);
+	else if(root->key == key) return root;
+	else if(key < root->key) return _search(root->lchild, key);
+	else return _search(root->rchild, key);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-void BSTree<ElementType>::_inOrderTraverse(BSTreeNode<ElementType> *root)
+template <typename KeyType, typename ValueType>
+void BSTree<KeyType, ValueType>::_inOrderTraverse(typename BSTree<KeyType, ValueType>::BSTreeNode   *root)
 {
 	if(root == 0) return;
 	_inOrderTraverse(root->lchild);
-	std::cout << root->element << std::endl;
+	std::cout << "<" << root->key << " , " << root->value << ">" << std::endl;
 	_inOrderTraverse(root->rchild);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-void BSTree<ElementType>::_preOrderTraverse(BSTreeNode<ElementType> *root)
+template <typename KeyType, typename ValueType>
+void BSTree<KeyType, ValueType>::_preOrderTraverse(typename BSTree<KeyType, ValueType>::BSTreeNode *root)
 {
 	if(root == 0) return;
-	std::cout << root->element << std::endl;
+	std::cout << "<" << root->key << " , " << root->value << ">" << std::endl;
 	_preOrderTraverse(root->lchild);
 	_preOrderTraverse(root->rchild);
 }
 //------------------------------------------------------------------------------------------------------------------------------------------
-template <typename ElementType>
-BSTreeNode<ElementType> *BSTree<ElementType>::_newNodeImpl(void)
+template <typename KeyType, typename ValueType>
+typename BSTree<KeyType, ValueType>::BSTreeNode*
+BSTree<KeyType, ValueType>::_newNodeImpl(void)
 {
-	BSTreeNode<ElementType> *pNode = new  BSTreeNode<ElementType>();
-	pNode->parent = pNode->lchild = pNode->rchild = NULL;
+    typename BSTree<KeyType, ValueType>::BSTreeNode *pNode = new typename BSTree<KeyType, ValueType>::BSTreeNode();
+	pNode->parent = pNode->lchild = pNode->rchild = pNode->pre = pNode->next = NULL;
 	return pNode;
 }

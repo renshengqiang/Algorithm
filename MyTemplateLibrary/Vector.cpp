@@ -373,6 +373,21 @@ namespace QTL{
         pVectorBegin = (T*)realloc(pVectorBegin, size*sizeof(T));
         mMaxSize = size;
         pVectorEnd = pVectorBegin + mSize;
+        //这里是错误的，需要执行默认构造函数
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    typename Vector<T>::size_type Vector<T>::capaticy(void)
+    {
+        return pVectorEnd - pVectorBegin;
+    }
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    void Vector<T>::reserve(typename Vector<T>::size_type size)
+    {
+        pVectorBegin = (T*)realloc(pVectorBegin, size*sizeof(T));
+        mMaxSize = size;
+        pVectorEnd = pVectorBegin + mSize;
     }
     //-----------------------------------------------------------------------------
     template <typename T>

@@ -62,6 +62,8 @@ namespace QTL{
 		size_type max_size(void);
 		bool empty(void);
 		void resize(size_type size);
+        size_type capaticy(void);
+        void reserve(size_type size);
 		
         T&	back(void);
 		T&	front(void);

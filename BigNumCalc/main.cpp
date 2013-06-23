@@ -10,10 +10,15 @@ using namespace std;
 
 int main()
 {
-	char *res = Plus("1234567899", "1900000001");
-
+	cout << "1234567899 * 1900000001 = ";
+	char *res = Multiply("1234567899", "1900000001");
 	cout << res << endl;
-	
+	delete[] res;
+
+	int remainder;
+	cout << "1234567899 / 3456 = ";
+	res = Devide("1234567899", "3456", &remainder);
+	cout << res << "------" << remainder << endl;
 	delete[] res;
 	return 0;
 }

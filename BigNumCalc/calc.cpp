@@ -6,6 +6,7 @@
  ************************************************************************/
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include <iostream>
 using namespace std;
 
@@ -196,12 +197,15 @@ char *Multiply(const char *lhs, const char *rhs)
 	}
 	return result;
 }
+/*
+ * bug: result=0, return ""
+ */
 char *Devide(const char *lhs, const char *rhs, int *remainder)
 {
 	/*legal num?*/
 	if(!_IsLegalNum(lhs) || !_IsLegalNum(rhs))
 	{
-		cerr << "Substraction Error: ilegal number input" << endl;
+		cerr << "Devide Error: ilegal number input" << endl;
 		return NULL;
 	}
 
@@ -237,4 +241,52 @@ char *Devide(const char *lhs, const char *rhs, int *remainder)
 		result[lLength - zeroLength] = 0;
 	}
 	return result;
+}
+/*
+ * convert a decimal string to n base string
+ * bug: can only convert to less than 10
+ */
+char *Decimal2N(const char *decimal, int n)
+{
+   if(!_IsLegalNum(decimal) || n < 2)
+   {
+       cerr << "Decimal2N Error: illegal input num " << endl;
+       return NULL;
+   }
+
+   /*calc*/
+   char *result, *devider, *temp, *temp2;
+   int decimalLength = strlen(decimal);
+   int resultLength = decimalLength * (log(10)/log(n)+1);
+   int i, remainder;
+   result = new char[resultLength];
+   temp = new char[decimalLength + 1];
+   devider = new char[2];
+   strncpy(temp, decimal, decimalLength+1);
+   temp[decimalLength] = 0;
+   devider[0] = '0' + n;
+   devider[1] = 0;
+
+   /*core in convert*/
+   i = 0;
+   while(temp  && strcmp(temp, ""))
+   {
+       temp2 = temp;
+       temp = Devide(temp, devider, &remainder);
+       result[i++]=remainder + '0';
+       delete[] temp2;
+   }
+   result[i] = 0;
+   delete[] temp;
+
+   /*reverse*/
+   for(int j=0; j<i/2; ++j)
+   {
+       int t = result[j];
+       result[j] = result[i-j-1];
+       result[i-j-1] = t;
+   }
+   
+   delete[] devider;
+   return result;
 }

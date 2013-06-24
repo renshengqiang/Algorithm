@@ -20,5 +20,10 @@ int main()
 	res = Devide("1234567899", "3456", &remainder);
 	cout << res << "------" << remainder << endl;
 	delete[] res;
+
+    cout << "1234567899: ";
+    res = Decimal2N("1234567899", 8);
+    cout << res << endl;
+    delete[] res;
 	return 0;
 }

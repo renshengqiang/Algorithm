@@ -1,2 +1,2 @@
 all:
-	gcc calc.cpp main.cpp -I. -g -lstdc++ -o main
+	gcc calc.cpp main.cpp -I. -g -lstdc++ -lm -o main

@@ -1,7 +1,13 @@
 #include "sort.h"
 #include <stack>
+#define NULL (void *)0
+/*
+ * 其实归并排序的空间复杂度是O(n),而我这里是O(nlgn),并且有频繁的new和delete
+ * O(n)的时间复杂度的实现是将中间工作都放在一个全局的数组中进行的
+ * 修改的话，需要对函数的形式进行一定的修改
+ */
 template <typename T>
-void Merge(T *l, int low, int mid, int high)
+void _Merge(T *l, int low, int mid, int high)
 {
 	T *temp;
 	int i,j,k;
@@ -25,7 +31,7 @@ void TwoWayMergeSortRecursive(T *l, int low, int high)
 		mid = (low+high)/2;
 		TwoWayMergeSortRecursive(l, low, mid);
 		TwoWayMergeSortRecursive(l, mid+1, high);
-		Merge<T>(l, low, mid, high);
+		_Merge<T>(l, low, mid, high);
 	}
 }
 struct MergeSortStackItem{
@@ -53,7 +59,7 @@ void TwoWayMergeSort(T *l, int low, int high)
 				item.low = (item.low+item.high)/2+1;
 			}
 		}else{
-			Merge(l, item.low, (item.low+item.high)/2, item.high);
+			_Merge<T>(l, item.low, (item.low+item.high)/2, item.high);
 		}
 	}
 }

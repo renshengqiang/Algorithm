@@ -1,6 +1,10 @@
 #include "sort.h"
 #include <stack>
 
+/*
+ * 这是最简单的快速排序的实现，当遇到已经排序的序列时，时间复杂度会变为O(n2)
+ * 可以对其进行改进，使用三者取中法进行
+ */
 template <typename T>
 int QuickSortOnce(T *l, int low, int high)
 {

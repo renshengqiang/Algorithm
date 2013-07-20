@@ -1,0 +1,2 @@
+Robin-Karp:
+the result of %q operation may between -(q-1)~(q-1), so we must protect t to make it > 0

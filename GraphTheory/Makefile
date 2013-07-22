@@ -1,2 +1,2 @@
 all:
-	g++ main.cpp AdjacentListAlgo.cpp -I. -lstdc++ -o main
+	g++ main.cpp AdjacentListAlgo.cpp AdjacentMatrixAlgo.cpp -I. -lstdc++ -o main

@@ -38,7 +38,7 @@ void InitGraph(struct Graph *pGraph)
     }
 }
 
-void _DFS(struct Graph graph, int index, int *pVisitFlagVec)
+void _DFS(struct Graph& graph, int index, int *pVisitFlagVec)
 {
     cout << graph.vertexVec[index].value << " ";
     

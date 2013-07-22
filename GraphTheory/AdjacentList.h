@@ -6,7 +6,7 @@
 struct Edge
 {
     int length;
-    int index;
+    int index;/*next vertex index*/
 };
 struct Vertex
 {

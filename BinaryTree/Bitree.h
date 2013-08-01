@@ -34,6 +34,9 @@ void TraverseLayer(Bitree tree, int layer);
 //calc the height of the tree
 int TreeDepth(Bitree tree);
 
-//find the nearest parent of two node
+//find the nearest parent of two nodes
 BitreeNode* NearestParent(Bitree tree, char first, char second);
+
+//find the max length of the tree, length is the number of edges
+int LongestPath(Bitree tree);
 #endif

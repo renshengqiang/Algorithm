@@ -51,5 +51,8 @@ int main()
     BitreeNode *parent = NearestParent(tree, 'D', 'J');
     if(parent)
         printf("nearest parent: %c\n", parent->data);
+
+	printf("longest path in tree: %d\n", LongestPath(tree));
+	printf("longest path in tree->rchild: %d\n", LongestPath(tree->rchild));
     return 0;
 }

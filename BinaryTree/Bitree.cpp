@@ -418,3 +418,42 @@ BitreeNode* NearestParent(Bitree tree, char first, char second)
     _NearParent(tree, first, second, &res);
     return res;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void _LongestPath(Bitree tree, int *pLength, int *pLeftDepth, int *pRightDepth)
+{
+	if(tree == NULL)
+	{
+		*pLength = -1;
+		*pLeftDepth = -1;
+		*pRightDepth = -1;
+		return;
+	}
+
+	int lLeftDepth, lRightDepth, rLeftDepth, rRightDepth, leftLength, rightLength;
+
+	_LongestPath(tree->lchild, &leftLength, &lLeftDepth, &lRightDepth);
+	_LongestPath(tree->rchild, &rightLength, &rLeftDepth, &rRightDepth);
+
+	*pLeftDepth = lLeftDepth > lRightDepth ? lLeftDepth + 1 : lRightDepth + 1;
+	*pRightDepth = rLeftDepth > rRightDepth ? rLeftDepth + 1 : rRightDepth + 1;
+
+	*pLength = *pLeftDepth + *pRightDepth;
+	if(*pLength < leftLength)
+	{
+		*pLength = leftLength;
+	}
+	if(*pLength < rightLength)
+	{
+		*pLength = rightLength;
+	}
+	return;
+}
+int LongestPath(Bitree tree)
+{
+	int leftDepth, rightDepth, length;
+
+	_LongestPath(tree, &length, &leftDepth, &rightDepth);
+
+	return length;
+}

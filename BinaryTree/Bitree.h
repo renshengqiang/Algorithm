@@ -12,6 +12,9 @@ typedef struct BitreeNode{
 //init the binary three
 Bitree InitTree(const char *preOrderSequence, const char *inOrderSequence);
 
+//calc the backorder sequence from proOrder sequence and inorder sequence
+char* CalcBackSequence(const char *pPre, const char *pMid);
+
 //traverse
 void PreOrderTraverseRecursive(Bitree tree);
 void PreOrderTraverseNonRecursive(Bitree tree);

@@ -8,6 +8,8 @@ int main()
 
     Bitree tree = InitTree(preOrder, inOrder);
 
+    printf("back order: %s\n", CalcBackSequence(preOrder, inOrder));
+
     PreOrderTraverseRecursive(tree);
     printf("\n");
 

@@ -50,6 +50,7 @@ void _InitTree(Bitree *root, const char *preOrderSequence, int preBegin, int pre
     _InitTree(&((*root)->rchild), preOrderSequence, preBegin + preLength + 1, preEnd,
             inOrderSequence, inBegin + preLength + 1, inEnd);
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 //Desc: create a Bitree from preOrderSequence and inOrderSequence
 //return the initial tree 
@@ -64,6 +65,73 @@ Bitree InitTree(const char *preOrderSequence, const char *inOrderSequence)
     _InitTree(&tree, preOrderSequence, 0, preLength-1,
                 inOrderSequence, 0, inLength-1);
     return tree;
+}
+////////////////////////////////////////////////////////////////////////////////
+//
+//根据先序遍历序列和中序遍历序列来求解后序遍历序列
+//和重建二叉树的想法相同，参数略有变化
+//_CalcBackOrderSequence是功能函数，CalcBackSequence是接口函数
+bool _CalcBackOrderSequence(const char *pPre, int preBegin, int preEnd,
+                            const char *pMid, int midBegin, int midEnd,
+                            char      *pBack, int backBegin, int backEnd)
+{
+    if(preEnd - preBegin != midEnd - midBegin) return false;
+    if(preEnd < preBegin) return true;
+
+    pBack[backEnd] = pPre[preBegin];
+
+    //find the mid pos
+    int preLength = -1; //preOrderSequence[preBegin]在中序序列中与中序序列开头的距离
+    for(int i= midBegin; i<=midEnd; ++i)
+    {
+        if(pMid[i] == pPre[preBegin])
+        {
+            preLength = i - midBegin;
+            break;
+        }
+    }
+    if(preLength == -1) return false; /*中序序列中没找到对应的字符*/
+
+    return _CalcBackOrderSequence(pPre, preBegin + 1, preBegin + preLength,
+                                  pMid, midBegin, midBegin + preLength - 1,
+                                  pBack, backBegin, backBegin + preLength-1) &&
+           _CalcBackOrderSequence(pPre, preBegin + preLength + 1, preEnd,
+                                  pMid, midBegin + preLength+1, midEnd,
+                                  pBack, backBegin + preLength,  backEnd-1);
+}
+char* CalcBackSequence(const char *pPre, const char *pMid)
+{
+    if(pPre == NULL || pMid == NULL)
+    {
+        fprintf(stderr, "Error CalcBackSequence: null pointer error\n");
+        return NULL;
+    }
+
+    int preLength = strlen(pPre);
+    if(preLength != strlen(pMid))
+    {
+        fprintf(stderr, "Error CalcBackSequence: two sequence's length is not equal\n");
+        return NULL;
+    }
+
+    char *pBack = (char *)malloc((preLength + 1) * sizeof(char));
+    if(pBack == NULL)
+    {
+        fprintf(stderr, "Error CalcBackSequence: memory error\n");
+        return NULL;
+    }
+    pBack[preLength] = 0;
+
+    bool ret;
+    ret = _CalcBackOrderSequence(pPre, 0, preLength-1, pMid, 0, preLength-1, pBack, 0, preLength-1);
+    if(ret == false)
+    {
+        fprintf(stderr, "Error CalcBackSequece: can not calc the back order sequence, check the parameter\n");
+        free(pBack);
+        return NULL;
+    }
+    return pBack;
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreOrderTraverseRecursive(Bitree tree)

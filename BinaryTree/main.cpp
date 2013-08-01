@@ -29,6 +29,21 @@ int main()
     LayerOrderTraverse(tree);
     printf("\n");
 
+    LayerOrderTraverse2(tree);
+    printf("\n");
+
+    printf("Layer0: ");
+    TraverseLayer(tree, 0);
+    printf("\n");
+
+    printf("Layer3: ");
+    TraverseLayer(tree, 3);
+    printf("\n");
+
+    printf("Layer5: ");
+    TraverseLayer(tree, 5);
+    printf("\n");
+
     printf("tree depth: %d\n", TreeDepth(tree));
 
     BitreeNode *parent = NearestParent(tree, 'D', 'J');

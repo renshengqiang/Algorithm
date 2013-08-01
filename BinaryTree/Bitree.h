@@ -23,6 +23,10 @@ void BackOrderTraverseRecursive(Bitree tree);
 void BackOrderTraverseNonRecursive(Bitree tree);
 
 void LayerOrderTraverse(Bitree tree);
+//按行打印，一层一行
+void LayerOrderTraverse2(Bitree tree);
+//遍历指定的一行，根是第0行
+void TraverseLayer(Bitree tree, int layer);
 
 //calc the height of the tree
 int TreeDepth(Bitree tree);

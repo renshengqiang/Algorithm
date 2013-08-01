@@ -50,6 +50,7 @@ void _InitTree(Bitree *root, const char *preOrderSequence, int preBegin, int pre
     _InitTree(&((*root)->rchild), preOrderSequence, preBegin + preLength + 1, preEnd,
             inOrderSequence, inBegin + preLength + 1, inEnd);
 }
+////////////////////////////////////////////////////////////////////////////////
 //Desc: create a Bitree from preOrderSequence and inOrderSequence
 //return the initial tree 
 Bitree InitTree(const char *preOrderSequence, const char *inOrderSequence)
@@ -64,7 +65,7 @@ Bitree InitTree(const char *preOrderSequence, const char *inOrderSequence)
                 inOrderSequence, 0, inLength-1);
     return tree;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PreOrderTraverseRecursive(Bitree tree)
 {
     if(tree)
@@ -74,6 +75,14 @@ void PreOrderTraverseRecursive(Bitree tree)
         PreOrderTraverseRecursive(tree->rchild);
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+//
+//注意这个是非递归遍历二叉树的标准模板，非常简单的模板
+//注意点：
+//1. 循环条件必须这样写，让判断逻辑简单
+//2. 当前结点不为空就变换到左孩子
+//3. 否则弹栈，变为右孩子
+//4. 栈中存放的是当前结点，而不是当前结点的右孩子
 void PreOrderTraverseNonRecursive(Bitree tree)
 {
     std::stack<BitreeNode*> stack;
@@ -95,7 +104,7 @@ void PreOrderTraverseNonRecursive(Bitree tree)
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void InOrderTraverseRecursive(Bitree tree)
 {
     if(tree)
@@ -105,6 +114,9 @@ void InOrderTraverseRecursive(Bitree tree)
         InOrderTraverseRecursive(tree->rchild);
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+//
+//和上面的先序的非递归算法极度相似，只是访问元素的位置的位置发生了变化
 void InOrderTraverseNonRecursive(Bitree tree)
 {
     std::stack<BitreeNode*> stack;
@@ -126,7 +138,7 @@ void InOrderTraverseNonRecursive(Bitree tree)
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void BackOrderTraverseRecursive(Bitree tree)
 {
     if(tree)
@@ -136,6 +148,15 @@ void BackOrderTraverseRecursive(Bitree tree)
         printf("%c", tree->data);
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//后序遍历二叉树的非递归实现，和前面两种的大体结构相同，需要栈的帮助
+//区别的地方在于：
+//1. 栈中保存的元素除了结点的指针还有结点压栈的次数
+//2. 遍历时当前结点不为空时需要将当前item的压栈次数增加一次再压栈
+//3. 必须在弹栈时才能访问，且必须是弹第二次的时候;
+//4. 弹一次的时候需要换为右孩子，弹两次的时候继续弹栈（当前结点置为空）
 struct StackItem
 {
     BitreeNode *pNode;
@@ -176,7 +197,9 @@ void BackOrderTraverseNonRecursive(Bitree tree)
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+//
+//按照层次遍历二叉树，需要一个队列的帮助
 void LayerOrderTraverse(Bitree tree)
 {
     std::queue<BitreeNode*> queue;
@@ -197,6 +220,98 @@ void LayerOrderTraverse(Bitree tree)
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//按照层次遍历二叉树，且每层都要分行显示
+struct QueueItem
+{
+    BitreeNode *pNode;
+    int layer;
+};
+void LayerOrderTraverse2(Bitree tree)
+{
+    std::queue<QueueItem> queue;
+    QueueItem item;
+    int currentLayer = 0;
+    BitreeNode *pCurrentNode;
+
+    item.pNode = tree;
+    item.layer = 0;
+    queue.push(item);
+    while(!queue.empty())
+    {
+        item = queue.front();
+        queue.pop();
+        pCurrentNode = item.pNode;
+        if(currentLayer != item.layer)
+        {
+            currentLayer = item.layer;
+            printf("\n");
+        }
+
+        if(item.pNode)
+        {
+            printf("%c", item.pNode->data);
+            item.layer++;
+            if(pCurrentNode->lchild)
+            {
+                item.pNode = pCurrentNode->lchild;
+                queue.push(item);
+            }
+            if(pCurrentNode->rchild)
+            {
+                item.pNode = pCurrentNode->rchild;
+                queue.push(item);
+            }
+        }
+    }
+    return;
+}
+////////////////////////////////////////////////////////////////////////////////
+//
+//遍历指定的一行，根是第0行
+void TraverseLayer(Bitree tree, int layer)
+{
+    std::queue<QueueItem> queue;
+    QueueItem item;
+    BitreeNode *pCurrentNode;
+
+    item.pNode = tree;
+    item.layer = 0;
+    queue.push(item);
+    while(!queue.empty())
+    {
+        item = queue.front();
+        queue.pop();
+        pCurrentNode = item.pNode;
+
+        if(item.pNode)
+        {
+            if(item.layer == layer)
+            {
+                printf("%c", item.pNode->data);
+            }
+            else if(item.layer < layer)
+            {
+                item.layer++;
+                if(pCurrentNode->lchild)
+                {
+                    item.pNode = pCurrentNode->lchild;
+                    queue.push(item);
+                }
+                if(pCurrentNode->rchild)
+                {
+                    item.pNode = pCurrentNode->rchild;
+                    queue.push(item);
+                }
+            }
+        }
+    }
+    return;
+}
+////////////////////////////////////////////////////////////////////////////////
+//
+//返回树的高度
 int TreeDepth(Bitree tree)
 {
     if(tree == NULL)
@@ -207,6 +322,12 @@ int TreeDepth(Bitree tree)
     return leftDepth > rightDepth? leftDepth + 1: rightDepth + 1;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//搜寻两个结点的最近共同父母
+//NearestParent是接口函数，指定树跟tree, 和两个孩子即可
+//_NearestParent是功能函数，增加了一个参数result，如果找到了，结果在其中
+//_NearestParent返回值表示first和second有几个是它的孩子
 int _NearParent(Bitree tree,  char first,  char second, Bitree *result)
 {
     if(tree == NULL) return 0;
